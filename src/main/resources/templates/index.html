@@ -1,10 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <title>Demo Spring</title>
 </head>
 <body>
-    <h1>Hello, Spring!</h1>
+    <header th:insert="blocks/header :: header"/>
+
+    <div class="container">
+        <main>
+            <h2 class="alert alert-primary">Это главная страница!</h2>
+            <p>Не то чтобы она здесь нужна, но допустим она описывает суть вот этого вот всего (здесь над текстом не заморачивался).</p>
+            <p>Данный проект выполнен в целях изучения и практики использования фреймворка Spring Boot. Вот <a target="_blank" href="#">ссылка на GitHub репозиторий</a>.</p>
+            <p>На этом сайте можно манипулировать базой данных об организациях и их сотрудниках. Существует две таблицы: органицазии и сотрудники. В таблице об организациях хранится инфа об организации, в таблицах сотрудников инфа о сотруднике и в какой организации устроен.</p>
+            <p>В качестве СУБД используется PostgreSQL - модная и молодёжная такая, наверняка о ней все слышали =)</p>
+            <p>Сайт задумывался как RESTful, надеюсь получилось. НАСЛАЖДАЙТЕСЬ!</p>
+            <p>P.S. Вся навигация в шапке.</p>
+        </main>
+    </div>
 </body>
 </html>
