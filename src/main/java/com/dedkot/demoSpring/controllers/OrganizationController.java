@@ -46,7 +46,7 @@ public class OrganizationController {
         organization.setName(name);
         orgRepo.save(organization);
 
-        return "redirect:/organization";
+        return "redirect:/organization/" + id;
     }
 
     @PostMapping("/{id}/remove")
