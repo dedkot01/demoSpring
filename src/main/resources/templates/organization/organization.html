@@ -11,7 +11,7 @@
 
     <title>Organizations</title>
 </head>
-<body>
+<body class="text-light bg-dark">
     <header th:insert="blocks/header :: header"/>
 
     <div class="container">
@@ -24,12 +24,14 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
+                <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="el : ${organizations}">
                 <th scope="row" th:text="${el.id}"/>
                 <td th:text="${el.name}"/>
+                <th><a th:href="@{/organization/{id}(id=${el.getId()})}" class="btn btn-primary">Подробнее</a></th>
             </tr>
             </tbody>
         </table>

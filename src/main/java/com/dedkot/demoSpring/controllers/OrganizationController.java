@@ -18,7 +18,43 @@ public class OrganizationController {
     public String organization(Model model) {
         Iterable<Organization> organizations = orgRepo.findAll();
         model.addAttribute("organizations", organizations);
+
         return "organization/organization";
+    }
+
+    @GetMapping("/{id}")
+    public String organizationDetails(@PathVariable("id") Long id,
+                                      Model model) {
+        model.addAttribute("organization", orgRepo.findById(id).get());
+
+        return "organization/details";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String organizationEdit(@PathVariable("id") Long id,
+                                      Model model) {
+        model.addAttribute("organization", orgRepo.findById(id).get());
+
+        return "organization/edit";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String organizationPostEdit(@PathVariable("id") Long id,
+                                       @RequestParam String name,
+                                       Model model) {
+        Organization organization = orgRepo.findById(id).get();
+        organization.setName(name);
+        orgRepo.save(organization);
+
+        return "redirect:/organization";
+    }
+
+    @PostMapping("/{id}/remove")
+    public String organizationPostRemove(@PathVariable("id") Long id) {
+        Organization organization = orgRepo.findById(id).get();
+        orgRepo.delete(organization);
+
+        return "redirect:/organization";
     }
 
     @GetMapping("/new")
@@ -30,6 +66,7 @@ public class OrganizationController {
     public String organizationPostNew(@RequestParam String name) {
         Organization organization = new Organization(name);
         orgRepo.save(organization);
+
         return "redirect:/organization";
     }
 }
