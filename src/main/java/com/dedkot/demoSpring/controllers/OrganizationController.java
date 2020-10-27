@@ -1,12 +1,17 @@
 package com.dedkot.demoSpring.controllers;
 
+import com.dedkot.demoSpring.models.Contract;
+import com.dedkot.demoSpring.models.Employee;
 import com.dedkot.demoSpring.models.Organization;
+import com.dedkot.demoSpring.repo.ContractRepostitory;
+import com.dedkot.demoSpring.repo.EmployeeRepository;
 import com.dedkot.demoSpring.repo.OrganizationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -15,6 +20,12 @@ public class OrganizationController {
 
     @Autowired
     private OrganizationRepository orgRepo;
+
+    @Autowired
+    private ContractRepostitory conRepo;
+
+    @Autowired
+    private EmployeeRepository empRepo;
 
     @GetMapping
     public String organization(Model model) {
@@ -28,6 +39,10 @@ public class OrganizationController {
     public String organizationDetails(@PathVariable("id") Long id,
                                       Model model) {
         model.addAttribute("organization", orgRepo.findById(id).get());
+        Iterable<Contract> list = conRepo.findAllByIdOrganization(id);
+        List<Long> ls = new ArrayList<>();
+        list.forEach(el -> ls.add(el.getIdEmployee()));
+        model.addAttribute("employees", empRepo.findAllById(ls));
 
         return "organization/details";
     }

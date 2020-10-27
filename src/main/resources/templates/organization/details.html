@@ -19,9 +19,26 @@
         <h2 class="col" th:text="${organization.name}"/>
         <a class="btn btn-primary" th:href="@{/organization/{id}/edit(id=${organization.getId()})}">Изменить</a>
         <form th:action="'/organization/' + ${organization.id} + '/remove'" method="post">
-            <button class="btn btn btn-danger" type="submit">Удалить</button>
+            <button class="btn btn-danger" type="submit">Удалить</button>
         </form>
     </div>
+    <div th:if="${employees.size() == 0}">Не имеет сотрудников</div>
+    <table th:if="${employees.size() > 0}" class="table table-hover table-dark">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Имя</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="el : ${employees}">
+            <th scope="row" th:text="${el.id}"/>
+            <td th:text="${el.name}"/>
+            <th><a th:href="@{/employee/{id}(id=${el.getId()})}" class="btn btn-primary">Подробнее</a></th>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>
