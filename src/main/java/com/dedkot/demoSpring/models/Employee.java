@@ -35,4 +35,21 @@ public class Employee {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof Employee) {
+            if (name != null ? name.equals(((Employee) obj).name) : name == ((Employee) obj).name)
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return id + " | " + name;
+    }
 }

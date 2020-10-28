@@ -1,7 +1,5 @@
 package com.dedkot.demoSpring.controllers;
 
-import com.dedkot.demoSpring.models.Contract;
-import com.dedkot.demoSpring.models.Employee;
 import com.dedkot.demoSpring.models.Organization;
 import com.dedkot.demoSpring.repo.ContractRepostitory;
 import com.dedkot.demoSpring.repo.EmployeeRepository;
@@ -39,10 +37,10 @@ public class OrganizationController {
     public String organizationDetails(@PathVariable("id") Long id,
                                       Model model) {
         model.addAttribute("organization", orgRepo.findById(id).get());
-        Iterable<Contract> list = conRepo.findAllByIdOrganization(id);
-        List<Long> ls = new ArrayList<>();
-        list.forEach(el -> ls.add(el.getIdEmployee()));
-        model.addAttribute("employees", empRepo.findAllById(ls));
+
+        List<Long> idsEmployee = new ArrayList<>();
+        conRepo.findAllByIdOrganization(id).forEach(el -> idsEmployee.add(el.getIdEmployee()));
+        model.addAttribute("employees", empRepo.findAllById(idsEmployee));
 
         return "organization/details";
     }
