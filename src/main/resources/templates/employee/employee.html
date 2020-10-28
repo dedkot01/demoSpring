@@ -15,9 +15,9 @@
     <header th:insert="blocks/header :: header"/>
 
     <div class="container">
-        <div class="row alert alert-warning">
+        <div class="row align-items-center alert alert-warning">
             <h2 class="col">Сотрудники</h2>
-            <a class="col-md-auto btn btn-success" href="/employee/new">Создать</a>
+            <span><a class="col-md-auto btn btn-success" href="/employee/new">Создать</a></span>
         </div>
         <h3 th:if="${employees.size() == 0}">А, ой! А тут и нет никого Т_Т</h3>
         <table th:if="${employees.size() > 0}" class="table table-hover table-dark">

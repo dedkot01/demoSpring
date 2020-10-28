@@ -15,11 +15,11 @@
 <header th:insert="blocks/header :: header"/>
 
 <div class="container">
-    <div class="row alert alert-warning">
+    <div class="row align-items-center alert alert-primary">
         <h2 class="col" th:text="${organization.name}"/>
-        <a class="btn btn-primary" th:href="@{/organization/{id}/edit(id=${organization.getId()})}">Изменить</a>
+        <a class="ml-2 btn btn-primary" th:href="@{/organization/{id}/edit(id=${organization.getId()})}">Изменить</a>
         <form th:action="'/organization/' + ${organization.id} + '/remove'" method="post">
-            <button class="btn btn-danger" type="submit">Удалить</button>
+            <button class="ml-2 btn btn-danger" type="submit">Удалить</button>
         </form>
     </div>
     <div th:if="${employees.size() == 0}">Не имеет сотрудников</div>
@@ -35,7 +35,7 @@
         <tr th:each="el : ${employees}">
             <th scope="row" th:text="${el.id}"/>
             <td th:text="${el.name}"/>
-            <th><a th:href="@{/employee/{id}(id=${el.getId()})}" class="btn btn-primary">Подробнее</a></th>
+            <td><a th:href="@{/employee/{id}(id=${el.getId()})}" class="btn btn-primary">Подробнее</a></td>
         </tr>
         </tbody>
     </table>

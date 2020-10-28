@@ -15,11 +15,11 @@
 <header th:insert="blocks/header :: header"/>
 
 <div class="container">
-    <h2 class="alert alert-warning">Новая организация</h2>
+    <h2 class="alert alert-success">Новая организация</h2>
     <form action="/organization/new" method="post">
         <div class="form-group">
             <label for="name_field">Название</label>
-            <input type="text" class="form-control" id="name_field" name="name">
+            <input type="text" class="form-control bg-secondary text-white" id="name_field" name="name">
         </div>
         <button type="submit" class="btn btn-primary">Создать</button>
     </form>
