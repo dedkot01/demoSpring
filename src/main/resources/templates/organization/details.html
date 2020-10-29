@@ -22,7 +22,10 @@
             <button class="ml-2 btn btn-danger" type="submit">Удалить</button>
         </form>
     </div>
-    <div th:if="${employees.size() == 0}">Не имеет сотрудников</div>
+    <div th:if="${organization.description != null}">
+        <p class="lead" th:text="${organization.description}"/>
+    </div>
+    <div th:if="${employees.size() == 0}">Нет информации о сотрудниках.</div>
     <table th:if="${employees.size() > 0}" class="table table-hover table-dark">
         <thead>
         <tr>

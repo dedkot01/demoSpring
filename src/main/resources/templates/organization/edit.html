@@ -20,6 +20,8 @@
         <div class="form-group">
             <label for="name_field">Название</label>
             <input type="text" class="form-control bg-secondary text-white" id="name_field" name="name" th:value="${organization.name}">
+            <label for="description_field">Описание</label>
+            <input type="text" class="form-control bg-secondary text-white" id="description_field" name="description" th:value="${organization.description}">
         </div>
         <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>

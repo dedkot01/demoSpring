@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ContractRepostitory extends JpaRepository<Contract, Long> {
     List<Contract> findAllByIdOrganization(Long idOrganization);
+
+    Contract findOneByIdEmployee(Long idEmployee);
 }

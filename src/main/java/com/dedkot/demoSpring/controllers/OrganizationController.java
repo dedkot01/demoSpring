@@ -55,10 +55,11 @@ public class OrganizationController {
 
     @PostMapping("/{id}/edit")
     public String organizationPostEdit(@PathVariable("id") Long id,
-                                       @RequestParam String name,
+                                       @RequestParam String name, @RequestParam String description,
                                        Model model) {
         Organization organization = orgRepo.findById(id).get();
         organization.setName(name);
+        organization.setDescription(description);
         orgRepo.save(organization);
 
         return "redirect:/organization/" + id;
@@ -78,8 +79,8 @@ public class OrganizationController {
     }
 
     @PostMapping("/new")
-    public String organizationPostNew(@RequestParam String name) {
-        Organization organization = new Organization(name);
+    public String organizationPostNew(@RequestParam String name, @RequestParam String description) {
+        Organization organization = new Organization(name, description);
         orgRepo.save(organization);
 
         return "redirect:/organization";
