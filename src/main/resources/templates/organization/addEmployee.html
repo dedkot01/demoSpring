@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <title th:text="${organization.name}"/>
+</head>
+<body class="text-light bg-dark">
+<header th:insert="blocks/header :: header"/>
+
+<div class="container">
+    <div class="row align-items-center alert alert-success">
+        <h2 class="col">Список доступных сотрудников для "<span th:text="${organization.name}"/>"</h2>
+    </div>
+    <div th:if="${freeEmployees.size() == 0}">В базе данных нет доступных сотрудников.</div>
+    <table th:if="${freeEmployees.size() > 0}" class="table table-hover table-dark">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Имя</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="el : ${freeEmployees}">
+            <th scope="row" th:text="${el.id}"/>
+            <td th:text="${el.name}"/>
+            <th><a th:href="@{/employee/{id}(id=${el.getId()})}" target="_blank" class="btn btn-primary">Подробнее</a></th>
+            <td>
+                <form th:action="'/organization/' + ${organization.id} + '/addEmployee'" method="post">
+                    <input type="hidden" name="idEmployee" th:value="${el.id}">
+                    <button class="ml-2 btn btn-success" type="submit">Нанять</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -25,12 +25,16 @@
     <div th:if="${organization.description != null}">
         <p class="lead" th:text="${organization.description}"/>
     </div>
+    <div class="mb-5">
+        <a class="btn btn-success" th:href="@{/organization/{id}/addEmployee(id=${organization.getId()})}">Нанять сотрудника</a>
+    </div>
     <div th:if="${employees.size() == 0}">Нет информации о сотрудниках.</div>
     <table th:if="${employees.size() > 0}" class="table table-hover table-dark">
         <thead>
         <tr>
-            <th scope="col">#</th>
+            <th scope="col" width="1px">#</th>
             <th scope="col">Имя</th>
+            <th scope="col"></th>
             <th scope="col"></th>
         </tr>
         </thead>
@@ -39,6 +43,12 @@
             <th scope="row" th:text="${el.id}"/>
             <td th:text="${el.name}"/>
             <td><a th:href="@{/employee/{id}(id=${el.getId()})}" class="btn btn-primary">Подробнее</a></td>
+            <td>
+                <form th:action="'/organization/' + ${organization.id} + '/dismissEmployee'" method="post">
+                    <input type="hidden" name="idEmployee" th:value="${el.id}">
+                    <button type="submit" class="btn btn-danger">Уволить</button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>

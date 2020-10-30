@@ -1,5 +1,7 @@
 package com.dedkot.demoSpring.controllers;
 
+import com.dedkot.demoSpring.models.Contract;
+import com.dedkot.demoSpring.models.Employee;
 import com.dedkot.demoSpring.models.Organization;
 import com.dedkot.demoSpring.repo.ContractRepostitory;
 import com.dedkot.demoSpring.repo.EmployeeRepository;
@@ -38,6 +40,10 @@ public class OrganizationController {
                                       Model model) {
         model.addAttribute("organization", orgRepo.findById(id).get());
 
+        /*
+        В будущем заменить на запрос:
+        select emp.* from employee emp join contract con on emp.id = con.id_employee where con.id_organization = {id}
+         */
         List<Long> idsEmployee = new ArrayList<>();
         conRepo.findAllByIdOrganization(id).forEach(el -> idsEmployee.add(el.getIdEmployee()));
         model.addAttribute("employees", empRepo.findAllById(idsEmployee));
@@ -84,5 +90,51 @@ public class OrganizationController {
         orgRepo.save(organization);
 
         return "redirect:/organization";
+    }
+
+
+
+    @GetMapping("/{id}/addEmployee")
+    public String organizationAddEmployee(@PathVariable("id") Long id, Model model) {
+        /*
+        В будущем заменить на запрос:
+        select emp.* from employee emp left outer join contract con on emp.id = con.id_employee where con.id_employee is null
+         */
+        List<Contract> contracts = conRepo.findAll();
+        List<Employee> freeEmployees = empRepo.findAll();
+
+
+
+        for (int i = 0; i < contracts.size(); i++) {
+            for (int j = 0; j < freeEmployees.size(); j++) {
+                if (freeEmployees.get(j).getId() == contracts.get(i).getIdEmployee()) {
+                    freeEmployees.remove(j);
+                    break;
+                }
+            }
+        }
+
+        model.addAttribute("organization", orgRepo.findById(id).get());
+        model.addAttribute("freeEmployees", freeEmployees);
+
+        return "organization/addEmployee";
+    }
+
+    @PostMapping("/{id}/addEmployee")
+    public String organizationPostAddEmployee(@PathVariable("id") Long id,
+                                              @RequestParam Long idEmployee) {
+        Contract contract = new Contract(idEmployee, id);
+        conRepo.save(contract);
+
+        return "redirect:/organization/" + id;
+    }
+
+    @PostMapping("/{id}/dismissEmployee")
+    public String organizationPostDismissEmployee(@PathVariable("id") Long id,
+                                                  @RequestParam Long idEmployee) {
+        Contract contract = conRepo.findOneByIdEmployee(idEmployee);
+        conRepo.delete(contract);
+
+        return "redirect:/organization/" + id;
     }
 }
