@@ -100,19 +100,11 @@ public class OrganizationController {
         В будущем заменить на запрос:
         select emp.* from employee emp left outer join contract con on emp.id = con.id_employee where con.id_employee is null
          */
-        List<Contract> contracts = conRepo.findAll();
         List<Employee> freeEmployees = empRepo.findAll();
 
-
-
-        for (int i = 0; i < contracts.size(); i++) {
-            for (int j = 0; j < freeEmployees.size(); j++) {
-                if (freeEmployees.get(j).getId() == contracts.get(i).getIdEmployee()) {
-                    freeEmployees.remove(j);
-                    break;
-                }
-            }
-        }
+        conRepo.findAll().forEach(contract -> {
+            freeEmployees.removeIf(employee -> employee.getId() == contract.getIdEmployee());
+        });
 
         model.addAttribute("organization", orgRepo.findById(id).get());
         model.addAttribute("freeEmployees", freeEmployees);
