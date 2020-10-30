@@ -1,7 +1,6 @@
 package com.dedkot.demoSpring.controllers;
 
 import com.dedkot.demoSpring.models.Contract;
-import com.dedkot.demoSpring.models.Employee;
 import com.dedkot.demoSpring.models.Organization;
 import com.dedkot.demoSpring.repo.ContractRepostitory;
 import com.dedkot.demoSpring.repo.EmployeeRepository;
@@ -10,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping("/organization")
@@ -29,8 +25,7 @@ public class OrganizationController {
 
     @GetMapping
     public String organization(Model model) {
-        List<Organization> organizations = orgRepo.findAll();
-        model.addAttribute("organizations", organizations);
+        model.addAttribute("organizations", orgRepo.findAll());
 
         return "organization/organization";
     }
@@ -39,14 +34,7 @@ public class OrganizationController {
     public String organizationDetails(@PathVariable("id") Long id,
                                       Model model) {
         model.addAttribute("organization", orgRepo.findById(id).get());
-
-        /*
-        В будущем заменить на запрос:
-        select emp.* from employee emp join contract con on emp.id = con.id_employee where con.id_organization = {id}
-         */
-        List<Long> idsEmployee = new ArrayList<>();
-        conRepo.findAllByIdOrganization(id).forEach(el -> idsEmployee.add(el.getIdEmployee()));
-        model.addAttribute("employees", empRepo.findAllById(idsEmployee));
+        model.addAttribute("employees", empRepo.findAllEmployeesByIdOrganization(id));
 
         return "organization/details";
     }
@@ -96,18 +84,8 @@ public class OrganizationController {
 
     @GetMapping("/{id}/addEmployee")
     public String organizationAddEmployee(@PathVariable("id") Long id, Model model) {
-        /*
-        В будущем заменить на запрос:
-        select emp.* from employee emp left outer join contract con on emp.id = con.id_employee where con.id_employee is null
-         */
-        List<Employee> freeEmployees = empRepo.findAll();
-
-        conRepo.findAll().forEach(contract -> {
-            freeEmployees.removeIf(employee -> employee.getId() == contract.getIdEmployee());
-        });
-
         model.addAttribute("organization", orgRepo.findById(id).get());
-        model.addAttribute("freeEmployees", freeEmployees);
+        model.addAttribute("freeEmployees", empRepo.findAllFreeEmployees());
 
         return "organization/addEmployee";
     }
