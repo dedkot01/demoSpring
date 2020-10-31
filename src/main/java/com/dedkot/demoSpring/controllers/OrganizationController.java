@@ -1,6 +1,7 @@
 package com.dedkot.demoSpring.controllers;
 
 import com.dedkot.demoSpring.models.Contract;
+import com.dedkot.demoSpring.models.Employee;
 import com.dedkot.demoSpring.models.Organization;
 import com.dedkot.demoSpring.repo.ContractRepostitory;
 import com.dedkot.demoSpring.repo.EmployeeRepository;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/organization")
@@ -23,30 +26,76 @@ public class OrganizationController {
     @Autowired
     private EmployeeRepository empRepo;
 
+    /**
+     * Вывод списка всех организаций.
+     */
     @GetMapping
     public String organization(Model model) {
-        model.addAttribute("organizations", orgRepo.findAll());
+        List<Organization> organizations = orgRepo.findAll();
+
+        model.addAttribute("organizations", organizations);
 
         return "organization/organization";
     }
 
+    /**
+     * Форма создания новой организации.
+     */
+    @GetMapping("/new")
+    public String organizationNew() {
+        return "organization/new";
+    }
+
+    /**
+     * Сохранения в БД новой организации.
+     * @param name Название организации
+     * @param description Описание организации
+     */
+    @PostMapping("/new")
+    public String organizationPostNew(@RequestParam String name, @RequestParam String description) {
+        Organization organization = new Organization(name, description);
+
+        orgRepo.save(organization);
+
+        return "redirect:/organization";
+    }
+
+    /**
+     * Вывод данных об организации.
+     * @param id Идентификатор организации
+     */
     @GetMapping("/{id}")
     public String organizationDetails(@PathVariable("id") Long id,
                                       Model model) {
-        model.addAttribute("organization", orgRepo.findById(id).get());
-        model.addAttribute("employees", empRepo.findAllEmployeesByIdOrganization(id));
+        Organization organization = orgRepo.findById(id).get();
+        List<Employee> employees = empRepo.findAllEmployeesByIdOrganization(id);
+
+        model.addAttribute("organization", organization);
+        model.addAttribute("employees", employees);
 
         return "organization/details";
     }
 
+    /**
+     * Форма редактирования данных об организации.
+     * @param id Идентификатор организации
+     */
     @GetMapping("/{id}/edit")
     public String organizationEdit(@PathVariable("id") Long id,
                                       Model model) {
-        model.addAttribute("organization", orgRepo.findById(id).get());
+        Organization organization = orgRepo.findById(id).get();
+
+        model.addAttribute("organization", organization);
 
         return "organization/edit";
     }
 
+    /**
+     * Обновление данных в БД об организации.
+     * @param id Идентификатор организации
+     * @param name Новое название организации
+     * @param description Новое описание организации
+     */
     @PostMapping("/{id}/edit")
     public String organizationPostEdit(@PathVariable("id") Long id,
                                        @RequestParam String name, @RequestParam String description,
@@ -54,57 +103,68 @@ public class OrganizationController {
         Organization organization = orgRepo.findById(id).get();
         organization.setName(name);
         organization.setDescription(description);
+
         orgRepo.save(organization);
 
         return "redirect:/organization/" + id;
     }
 
+    /**
+     * Удаление из БД указанную организацию.
+     * @param id Идентификатор удаляемой организации
+     */
     @PostMapping("/{id}/remove")
     public String organizationPostRemove(@PathVariable("id") Long id) {
         Organization organization = orgRepo.findById(id).get();
+
         orgRepo.delete(organization);
 
         return "redirect:/organization";
     }
 
-    @GetMapping("/new")
-    public String organizationNew() {
-        return "organization/new";
-    }
-
-    @PostMapping("/new")
-    public String organizationPostNew(@RequestParam String name, @RequestParam String description) {
-        Organization organization = new Organization(name, description);
-        orgRepo.save(organization);
-
-        return "redirect:/organization";
-    }
-
-
-
+    /**
+     * Страница наёма нового сотрудника (из списка свободных) в организацию.
+     * @param id Идентификатор организации
+     */
     @GetMapping("/{id}/addEmployee")
     public String organizationAddEmployee(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("organization", orgRepo.findById(id).get());
-        model.addAttribute("freeEmployees", empRepo.findAllFreeEmployees());
+        Organization organization = orgRepo.findById(id).get();
+        List<Employee> freeEmployees = empRepo.findAllFreeEmployees();
+
+        model.addAttribute("organization", organization);
+        model.addAttribute("freeEmployees", freeEmployees);
 
         return "organization/addEmployee";
     }
 
+    /**
+     * Сохранение записи в БД о новом сотруднике организации.
+     * @param id Идентификатор организации
+     * @param idEmployee Идентификатор нового сотрудника организации
+     */
     @PostMapping("/{id}/addEmployee")
     public String organizationPostAddEmployee(@PathVariable("id") Long id,
                                               @RequestParam Long idEmployee) {
         Contract contract = new Contract(idEmployee, id);
+
         conRepo.save(contract);
 
         return "redirect:/organization/" + id;
     }
 
+    /**
+     * Увольнение сотрудника из организации.
+     * @param id Идентификатор организации
+     * @param idEmployee Идентификатор увольняемого сотрудника
+     */
     @PostMapping("/{id}/dismissEmployee")
     public String organizationPostDismissEmployee(@PathVariable("id") Long id,
                                                   @RequestParam Long idEmployee) {
         Contract contract = conRepo.findOneByIdEmployee(idEmployee);
+
         conRepo.delete(contract);
 
         return "redirect:/organization/" + id;
     }
+
 }

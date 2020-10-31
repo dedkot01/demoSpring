@@ -5,10 +5,18 @@ import javax.persistence.Id;
 
 @Entity
 public class Contract {
+
     @Id
     private Long idEmployee;
 
     private Long idOrganization;
+
+    public Contract() {}
+
+    public Contract(Long idEmployee, Long idOrganization) {
+        this.idEmployee = idEmployee;
+        this.idOrganization = idOrganization;
+    }
 
     public Long getIdEmployee() {
         return idEmployee;
@@ -26,11 +34,4 @@ public class Contract {
         this.idOrganization = idOrganization;
     }
 
-    public Contract(Long idEmployee, Long idOrganization) {
-        this.idEmployee = idEmployee;
-        this.idOrganization = idOrganization;
-    }
-
-    public Contract() {
-    }
 }

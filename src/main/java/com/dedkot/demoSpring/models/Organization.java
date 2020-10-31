@@ -2,21 +2,20 @@ package com.dedkot.demoSpring.models;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Organization {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
 
     private String name;
 
     private String description;
 
-    public Organization() {
-    }
+    public Organization() {}
 
     public Organization(String name, String description) {
         this.name = name;
@@ -46,4 +45,5 @@ public class Organization {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }

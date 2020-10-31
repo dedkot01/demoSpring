@@ -2,19 +2,18 @@ package com.dedkot.demoSpring.models;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Employee {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
 
     private String name;
 
-    public Employee() {
-    }
+    public Employee() {}
 
     public Employee(String name) {
         this.name = name;
