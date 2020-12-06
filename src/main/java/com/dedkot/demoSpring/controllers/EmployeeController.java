@@ -2,7 +2,6 @@ package com.dedkot.demoSpring.controllers;
 
 import com.dedkot.demoSpring.models.Employee;
 import com.dedkot.demoSpring.models.Organization;
-import com.dedkot.demoSpring.repo.ContractRepostitory;
 import com.dedkot.demoSpring.repo.EmployeeRepository;
 import com.dedkot.demoSpring.repo.OrganizationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,6 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeRepository empRepo;
-
-    @Autowired
-    private ContractRepostitory conRepo;
 
     @Autowired
     private OrganizationRepository orgRepo;
@@ -66,7 +62,7 @@ public class EmployeeController {
     public String employeeDetails(@PathVariable Long id,
                                   Model model) {
         Employee employee = empRepo.findById(id).get();
-        Organization organization = orgRepo.findOrganizationByIdEmployee(id);
+        Organization organization = employee.getOrganization();
 
         model.addAttribute("employee", employee);
         model.addAttribute("organization", organization);
@@ -97,8 +93,8 @@ public class EmployeeController {
     public String employeePostEdit(@PathVariable Long id,
                                    @RequestParam String name) {
         Employee employee = empRepo.findById(id).get();
-        employee.setName(name);
 
+        employee.setName(name);
         empRepo.save(employee);
 
         return "redirect:/employee/" + id;

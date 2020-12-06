@@ -1,9 +1,7 @@
 package com.dedkot.demoSpring.controllers;
 
-import com.dedkot.demoSpring.models.Contract;
 import com.dedkot.demoSpring.models.Employee;
 import com.dedkot.demoSpring.models.Organization;
-import com.dedkot.demoSpring.repo.ContractRepostitory;
 import com.dedkot.demoSpring.repo.EmployeeRepository;
 import com.dedkot.demoSpring.repo.OrganizationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +17,6 @@ public class OrganizationController {
 
     @Autowired
     private OrganizationRepository orgRepo;
-
-    @Autowired
-    private ContractRepostitory conRepo;
 
     @Autowired
     private EmployeeRepository empRepo;
@@ -68,7 +63,7 @@ public class OrganizationController {
     public String organizationDetails(@PathVariable("id") Long id,
                                       Model model) {
         Organization organization = orgRepo.findById(id).get();
-        List<Employee> employees = empRepo.findAllEmployeesByIdOrganization(id);
+        List<Employee> employees = empRepo.findAllByOrganization(organization);
 
         model.addAttribute("organization", organization);
         model.addAttribute("employees", employees);
@@ -101,9 +96,9 @@ public class OrganizationController {
                                        @RequestParam String name, @RequestParam String description,
                                        Model model) {
         Organization organization = orgRepo.findById(id).get();
+
         organization.setName(name);
         organization.setDescription(description);
-
         orgRepo.save(organization);
 
         return "redirect:/organization/" + id;
@@ -129,7 +124,7 @@ public class OrganizationController {
     @GetMapping("/{id}/addEmployee")
     public String organizationAddEmployee(@PathVariable("id") Long id, Model model) {
         Organization organization = orgRepo.findById(id).get();
-        List<Employee> freeEmployees = empRepo.findAllFreeEmployees();
+        List<Employee> freeEmployees = empRepo.findAllFree();
 
         model.addAttribute("organization", organization);
         model.addAttribute("freeEmployees", freeEmployees);
@@ -145,9 +140,11 @@ public class OrganizationController {
     @PostMapping("/{id}/addEmployee")
     public String organizationPostAddEmployee(@PathVariable("id") Long id,
                                               @RequestParam Long idEmployee) {
-        Contract contract = new Contract(idEmployee, id);
+        Employee employee = empRepo.findById(idEmployee).get();
+        Organization organization = orgRepo.findById(id).get();
 
-        conRepo.save(contract);
+        employee.setOrganization(organization);
+        empRepo.save(employee);
 
         return "redirect:/organization/" + id;
     }
@@ -160,9 +157,10 @@ public class OrganizationController {
     @PostMapping("/{id}/dismissEmployee")
     public String organizationPostDismissEmployee(@PathVariable("id") Long id,
                                                   @RequestParam Long idEmployee) {
-        Contract contract = conRepo.findOneByIdEmployee(idEmployee);
+        Employee employee = empRepo.findById(idEmployee).get();
 
-        conRepo.delete(contract);
+        employee.setOrganization(null);
+        empRepo.save(employee);
 
         return "redirect:/organization/" + id;
     }
