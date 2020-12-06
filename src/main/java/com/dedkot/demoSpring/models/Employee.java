@@ -1,8 +1,6 @@
 package com.dedkot.demoSpring.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Employee {
@@ -13,7 +11,12 @@ public class Employee {
 
     private String name;
 
-    public Employee() {}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ORGANIZATION_ID")
+    private Organization organization;
+
+    public Employee() {
+    }
 
     public Employee(String name) {
         this.name = name;
@@ -35,6 +38,14 @@ public class Employee {
         this.name = name;
     }
 
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -51,4 +62,5 @@ public class Employee {
     public String toString() {
         return id + " | " + name;
     }
+
 }
