@@ -1,8 +1,8 @@
 package com.dedkot.demoSpring.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Organization {
@@ -15,11 +15,20 @@ public class Organization {
 
     private String description;
 
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+    private List<Employee> employees = new ArrayList<>();
+
     public Organization() {}
 
     public Organization(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public Organization(String name, String description, List<Employee> employees) {
+        this.name = name;
+        this.description = description;
+        this.employees = employees;
     }
 
     public Long getId() {
@@ -46,4 +55,11 @@ public class Organization {
         this.description = description;
     }
 
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
 }
