@@ -112,6 +112,7 @@ public class OrganizationController {
     public String organizationPostRemove(@PathVariable("id") Long id) {
         Organization organization = orgRepo.findById(id).get();
 
+        empRepo.dismissAllEmployeesByOrganization(organization);
         orgRepo.delete(organization);
 
         return "redirect:/organization";
