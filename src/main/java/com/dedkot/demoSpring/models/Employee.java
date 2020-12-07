@@ -11,8 +11,11 @@ public class Employee {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ORGANIZATION_ID")
+    @ManyToOne
+    @JoinTable(name = "EMPLOYEE_ORGANIZATION",
+                joinColumns = @JoinColumn(name = "EMPLOYEE_ID"),
+                inverseJoinColumns = @JoinColumn(nullable = false)
+    )
     private Organization organization;
 
     public Employee() {

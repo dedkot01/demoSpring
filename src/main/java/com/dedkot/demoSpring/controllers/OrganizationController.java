@@ -63,10 +63,9 @@ public class OrganizationController {
     public String organizationDetails(@PathVariable("id") Long id,
                                       Model model) {
         Organization organization = orgRepo.findById(id).get();
-        List<Employee> employees = empRepo.findAllByOrganization(organization);
 
         model.addAttribute("organization", organization);
-        model.addAttribute("employees", employees);
+        model.addAttribute("employees", organization.getEmployees());
 
         return "organization/details";
     }
@@ -112,7 +111,6 @@ public class OrganizationController {
     public String organizationPostRemove(@PathVariable("id") Long id) {
         Organization organization = orgRepo.findById(id).get();
 
-        empRepo.dismissAllEmployeesByOrganization(organization);
         orgRepo.delete(organization);
 
         return "redirect:/organization";

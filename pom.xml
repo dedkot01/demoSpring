@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.dedkot</groupId>
 	<artifactId>demoSpring</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<name>demoSpring</name>
 	<description>Demo project for Spring Boot</description>
 
