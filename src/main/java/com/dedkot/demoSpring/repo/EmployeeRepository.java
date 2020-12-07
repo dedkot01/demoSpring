@@ -17,15 +17,7 @@ import java.util.List;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
-    @Query("select emp from Employee emp where emp.organization = :organization")
-    List<Employee> findAllByOrganization(Organization organization);
-
     @Query("select emp from Employee emp where emp.organization = null")
     List<Employee> findAllFree();
-
-    @Transactional
-    @Modifying
-    @Query("update Employee emp set emp.organization = null where emp.organization = :organization")
-    void dismissAllEmployeesByOrganization(Organization organization);
 
 }
